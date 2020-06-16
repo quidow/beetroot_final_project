@@ -14,10 +14,20 @@ class Hotel(models.Model):
     services = models.ManyToManyField(Service)
 
 
+class HotelPhoto(models.Model):
+    photo = models.ImageField()
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+
+
 class Room(models.Model):
     hotel = models.ForeignKey(to=Hotel, on_delete=models.CASCADE)
     amenities = models.ManyToManyField(Amenity)
     persons = models.SmallIntegerField(default=1)
+
+
+class RoomPhoto(models.Model):
+    photo = models.ImageField()
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
 
 class Client(models.Model):
