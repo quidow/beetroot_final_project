@@ -39,4 +39,3 @@ admin.site.register(Amenity)
 admin.site.register(Service)
 admin.site.register(Room, RoomAdmin)
 admin.site.register(Hotel, HotelAdmin)
-

@@ -2,7 +2,7 @@ from rest_framework import routers
 from .views import AmenityViewSet, ServiceViewSet, HotelViewSet, HotelPhotoViewSet, RoomViewSet, RoomPhotoViewSet
 
 
-router = routers.DefaultRouter()
+router = routers.SimpleRouter()
 router.register(r'amenities', AmenityViewSet)
 router.register(r'services', ServiceViewSet)
 router.register(r'hotels', HotelViewSet)
