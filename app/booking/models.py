@@ -28,7 +28,6 @@ class Service(models.Model):
 
 class Hotel(models.Model):
     name = models.CharField(max_length=255, verbose_name='Название')
-    # owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name='Администратор')
     services = models.ManyToManyField(Service, blank=True, verbose_name='Услуги')
 
     def __str__(self):
@@ -38,6 +37,16 @@ class Hotel(models.Model):
         ordering = ["name"]
         verbose_name = "Отель"
         verbose_name_plural = "Отели"
+
+
+class HotelAdminRelation(models.Model):
+    admin = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name='Администратор')
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, verbose_name='Отель')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['admin', 'hotel'], name='unique admin and hotel')
+        ]
 
 
 class HotelPhoto(models.Model):
@@ -53,7 +62,7 @@ class HotelPhoto(models.Model):
 class Room(models.Model):
     hotel = models.ForeignKey(to=Hotel, on_delete=models.CASCADE, verbose_name='Отель')
     amenities = models.ManyToManyField(Amenity, blank=True, verbose_name='Удобства')
-    persons = models.SmallIntegerField(default=1, verbose_name='Количество человек')
+    persons = models.PositiveSmallIntegerField(default=1, verbose_name='Количество человек')
 
     class Meta:
         ordering = ["pk"]
