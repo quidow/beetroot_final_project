@@ -44,6 +44,8 @@ class HotelAdminRelation(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, verbose_name='Отель')
 
     class Meta:
+        verbose_name = "Администратор отеля"
+        verbose_name_plural = "Администраторы отелей"
         constraints = [
             models.UniqueConstraint(fields=['admin', 'hotel'], name='unique admin and hotel')
         ]
