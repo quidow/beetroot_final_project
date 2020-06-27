@@ -2,17 +2,19 @@ from rest_framework import viewsets
 from .models import Amenity, Service, Hotel, HotelAdminRelation, HotelPhoto, Room, RoomPhoto
 from .serializers import AmenitySerializer, ServiceSerializer, HotelSerializer, HotelPhotoSerializer, RoomSerializer, \
     RoomPhotoSerializer
-from .permissions import IsAdminOrReadOnly, IsAdminOrReadOnlyHotelRel, IsAdminOrReadOnlyRoomRel
+from .permissions import IsAdminOrReadOnly, IsAdminOrReadOnlyHotelRel, IsAdminOrReadOnlyRoomRel, IsSuperUserOrReadOnly
 
 
-class AmenityViewSet(viewsets.ReadOnlyModelViewSet):
+class AmenityViewSet(viewsets.ModelViewSet):
     queryset = Amenity.objects.all()
     serializer_class = AmenitySerializer
+    permission_classes = [IsSuperUserOrReadOnly]
 
 
-class ServiceViewSet(viewsets.ReadOnlyModelViewSet):
+class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
+    permission_classes = [IsSuperUserOrReadOnly]
 
 
 class HotelViewSet(viewsets.ModelViewSet):

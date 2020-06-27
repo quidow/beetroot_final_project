@@ -2,9 +2,27 @@ from rest_framework import permissions
 from .models import HotelAdminRelation, Room
 
 
+class IsSuperUserOrReadOnly(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if request.user.is_superuser:
+            return True
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if request.user.is_superuser:
+            return True
+
+
 class IsAdminOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
+
         if request.method in permissions.SAFE_METHODS:
             return True
 
