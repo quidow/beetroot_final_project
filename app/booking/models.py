@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 
 class Amenity(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='Название')
+    description = models.TextField(blank=True, null=True, verbose_name='Описание')
+    icon = models.ImageField(blank=True, null=True, verbose_name='Иконка')
 
     def __str__(self):
         return self.name
@@ -16,6 +18,8 @@ class Amenity(models.Model):
 
 class Service(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='Название')
+    description = models.TextField(blank=True, null=True, verbose_name='Описание')
+    icon = models.ImageField(blank=True, null=True, verbose_name='Иконка')
 
     def __str__(self):
         return self.name
@@ -80,7 +84,6 @@ class RoomPhoto(models.Model):
         ordering = ["pk"]
         verbose_name = "Фото номера"
         verbose_name_plural = "Фото номеров"
-
 
 # class Client(models.Model):
 #     first_name = models.CharField(max_length=255)
