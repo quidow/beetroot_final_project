@@ -58,7 +58,7 @@ class Hotel(models.Model):
 
 class HotelPhoto(models.Model):
     photo = models.ImageField(verbose_name='Фото')
-    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, verbose_name='Отель')
+    hotel = models.ForeignKey(Hotel, related_name='photos', on_delete=models.CASCADE, verbose_name='Отель')
 
     class Meta:
         ordering = ["pk"]
@@ -79,7 +79,7 @@ class Room(models.Model):
 
 class RoomPhoto(models.Model):
     photo = models.ImageField(verbose_name='Фото')
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, verbose_name='Номер')
+    room = models.ForeignKey(Room, related_name='photos', on_delete=models.CASCADE, verbose_name='Номер')
 
     class Meta:
         ordering = ["pk"]
