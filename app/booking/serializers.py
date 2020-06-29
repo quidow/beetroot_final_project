@@ -5,38 +5,34 @@ from .models import Amenity, Service, Hotel, HotelPhoto, Room, RoomPhoto
 class AmenitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Amenity
-        fields = ['pk', 'name', ]
+        fields = ['id', 'name', 'description', 'icon', ]
 
 
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = ['pk', 'name', ]
+        fields = ['id', 'name', 'description', 'icon', ]
 
 
 class HotelSerializer(serializers.ModelSerializer):
-    # services = ServiceSerializer(many=True)
-
     class Meta:
         model = Hotel
-        fields = ['pk', 'name', 'services', ]
+        fields = ['id', 'name', 'services', ]
 
 
 class HotelPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = HotelPhoto
-        fields = ['pk', 'photo', 'hotel', ]
+        fields = ['id', 'photo', 'hotel', ]
 
 
 class RoomSerializer(serializers.ModelSerializer):
-    # amenities = AmenitySerializer(many=True)
-
     class Meta:
         model = Room
-        fields = ['pk', 'hotel', 'amenities', 'persons']
+        fields = ['id', 'hotel', 'amenities', 'persons']
 
 
 class RoomPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomPhoto
-        fields = ['pk', 'photo', 'room', ]
+        fields = ['id', 'photo', 'room', ]
