@@ -1,8 +1,11 @@
+from rest_framework import permissions
 from rest_framework import viewsets
-from .models import Amenity, Service, Hotel, HotelAdminRelation, HotelPhoto, Room, RoomPhoto
+
+from .models import Amenity, Service, Hotel, HotelPhoto, Room, RoomPhoto
+from .permissions import IsOwnerOrReadOnly, IsSuperUserOrReadOnly, IsOwnerOrReadOnlyHotelRel, \
+    IsOwnerOrReadOnlyHotelRoomRel
 from .serializers import AmenitySerializer, ServiceSerializer, HotelSerializer, HotelPhotoSerializer, RoomSerializer, \
     RoomPhotoSerializer
-from .permissions import IsAdminOrReadOnly, IsAdminOrReadOnlyHotelRel, IsAdminOrReadOnlyRoomRel, IsSuperUserOrReadOnly
 
 
 class AmenityViewSet(viewsets.ModelViewSet):
@@ -20,26 +23,25 @@ class ServiceViewSet(viewsets.ModelViewSet):
 class HotelViewSet(viewsets.ModelViewSet):
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
-        instance = serializer.save()
-        HotelAdminRelation.objects.create(admin=self.request.user, hotel=instance)
+        serializer.save(owners=[self.request.user])
 
 
 class HotelPhotoViewSet(viewsets.ModelViewSet):
     queryset = HotelPhoto.objects.all()
     serializer_class = HotelPhotoSerializer
-    permission_classes = [IsAdminOrReadOnlyHotelRel]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnlyHotelRel]
 
 
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
-    permission_classes = [IsAdminOrReadOnlyHotelRel]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnlyHotelRel]
 
 
 class RoomPhotoViewSet(viewsets.ModelViewSet):
     queryset = RoomPhoto.objects.all()
     serializer_class = RoomPhotoSerializer
-    permission_classes = [IsAdminOrReadOnlyRoomRel]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnlyHotelRoomRel]

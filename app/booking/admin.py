@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Amenity, Service, Hotel, HotelAdminRelation, HotelPhoto, Room, RoomPhoto
+from .models import Amenity, Service, Hotel, HotelPhoto, Room, RoomPhoto
 
 
 class RoomPhotoInline(admin.StackedInline):
@@ -28,7 +28,7 @@ class HotelPhotoInline(admin.StackedInline):
 
 
 class HotelAdmin(admin.ModelAdmin):
-    filter_horizontal = ('services',)
+    filter_horizontal = ('owners', 'services',)
     inlines = [
         HotelPhotoInline,
         # RoomInline,
@@ -43,4 +43,4 @@ admin.site.register(Amenity)
 admin.site.register(Service)
 admin.site.register(Room, RoomAdmin)
 admin.site.register(Hotel, HotelAdmin)
-admin.site.register(HotelAdminRelation, HotelAdminRelationAdmin)
+# admin.site.register(HotelAdminRelation, HotelAdminRelationAdmin)

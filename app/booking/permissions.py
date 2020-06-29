@@ -1,5 +1,6 @@
 from rest_framework import permissions
-from .models import HotelAdminRelation, Room
+
+from .models import Hotel, Room
 
 
 class IsSuperUserOrReadOnly(permissions.BasePermission):
@@ -19,50 +20,30 @@ class IsSuperUserOrReadOnly(permissions.BasePermission):
             return True
 
 
-class IsAdminOrReadOnly(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-
-        if request.method in permissions.SAFE_METHODS:
-            return True
-
-        return request.user.is_authenticated
+class IsOwnerOrReadOnly(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return HotelAdminRelation.objects.filter(admin=request.user, hotel=obj).exists()
+        if request.user.is_superuser:
+            return True
+
+        return request.user in obj.owners.all()
 
 
-class IsAdminOrReadOnlyHotelRel(permissions.BasePermission):
+class IsOwnerOrReadOnlyHotelRel(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        if request.method == 'POST' and request.user.is_authenticated and request.data:
-            return HotelAdminRelation.objects.filter(admin=request.user, hotel=request.data.get("hotel", None)).exists()
-
-        return request.user.is_authenticated
-
-    def has_object_permission(self, request, view, obj):
-
-        if request.method in permissions.SAFE_METHODS:
+        if request.user.is_superuser:
             return True
 
-        return HotelAdminRelation.objects.filter(admin=request.user, hotel=obj.hotel).exists()
-
-
-class IsAdminOrReadOnlyRoomRel(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-
-        if request.method == 'POST' and request.user.is_authenticated and request.data:
-            room = Room.objects.get(pk=request.data.get("room", None))
-            return HotelAdminRelation.objects.filter(admin=request.user, hotel=room.hotel).exists()
+        if request.method == 'POST' and request.data:
+            hotel = Hotel.objects.get(pk=request.data["hotel"])
+            return request.user in hotel.owners.all()
 
         return request.user.is_authenticated
 
@@ -71,4 +52,33 @@ class IsAdminOrReadOnlyRoomRel(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return HotelAdminRelation.objects.filter(admin=request.user, hotel=obj.room.hotel).exists()
+        if request.user.is_superuser:
+            return True
+
+        return request.user in obj.hotel.owners.all()
+
+
+class IsOwnerOrReadOnlyHotelRoomRel(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if request.user.is_superuser:
+            return True
+
+        if request.method == 'POST' and request.data:
+            room = Room.objects.get(pk=request.data["room"])
+            return request.user in room.hotel.owners.all()
+
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if request.user.is_superuser:
+            return True
+
+        return request.user in obj.room.hotel.owners.all()
