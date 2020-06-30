@@ -33,7 +33,7 @@ class Service(models.Model):
 class Hotel(models.Model):
     name = models.CharField(max_length=255, verbose_name='Название')
     services = models.ManyToManyField(Service, blank=True, verbose_name='Услуги')
-    owners = models.ManyToManyField(to=get_user_model(), verbose_name='Администраторы')
+    owners = models.ManyToManyField(get_user_model(), verbose_name='Администраторы')
 
     def __str__(self):
         return self.name
@@ -67,7 +67,7 @@ class HotelPhoto(models.Model):
 
 
 class Room(models.Model):
-    hotel = models.ForeignKey(to=Hotel, on_delete=models.CASCADE, verbose_name='Отель')
+    hotel = models.ForeignKey(Hotel, related_name='rooms', on_delete=models.CASCADE, verbose_name='Отель')
     amenities = models.ManyToManyField(Amenity, blank=True, verbose_name='Удобства')
     persons = models.PositiveSmallIntegerField(default=1, verbose_name='Количество человек')
 

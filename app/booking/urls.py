@@ -10,13 +10,18 @@ class NestedDefaultRouter(NestedRouterMixin, routers.SimpleRouter):
 router = NestedDefaultRouter()
 router.register(r'amenities', AmenityViewSet)
 router.register(r'services', ServiceViewSet)
-router.register(r'hotels', HotelViewSet).register(
+hotels = router.register(r'hotels', HotelViewSet)
+hotels.register(
     'photos', HotelPhotoViewSet,
     basename='hotels-photos',
     parents_query_lookups=['hotel']
 )
-router.register(r'rooms', RoomViewSet).register(
-    'photos', RoomPhotoViewSet,
+hotels.register(
+    r'rooms', RoomViewSet,
+    basename='hotels-rooms',
+    parents_query_lookups=['hotel']
+).register(
+    r'photos', RoomPhotoViewSet,
     basename='rooms-photos',
-    parents_query_lookups=['room']
+    parents_query_lookups=['room__hotel', 'room']
 )

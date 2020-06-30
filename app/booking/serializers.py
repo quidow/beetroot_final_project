@@ -25,6 +25,20 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'icon', ]
 
 
+class RoomPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoomPhoto
+        fields = ['id', 'photo', 'room', ]
+
+
+class RoomSerializer(serializers.HyperlinkedModelSerializer):
+    photos = ImageUrlField(many=True, read_only=True)
+
+    class Meta:
+        model = Room
+        fields = ['id', 'hotel', 'amenities', 'persons', 'photos']
+
+
 class HotelPhotoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = HotelPhoto
@@ -38,23 +52,11 @@ class HotelSerializer(serializers.HyperlinkedModelSerializer):
     #     slug_field='photo'
     # )
     photos = ImageUrlField(many=True, read_only=True)
+    rooms = RoomSerializer(many=True, read_only=True)
 
+    # rooms = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='room-detail')
     # photos = HotelPhotoSerializer(many=True)
 
     class Meta:
         model = Hotel
-        fields = ['id', 'name', 'services', 'photos']
-
-
-class RoomPhotoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RoomPhoto
-        fields = ['id', 'photo', 'room', ]
-
-
-class RoomSerializer(serializers.HyperlinkedModelSerializer):
-    photos = ImageUrlField(many=True, read_only=True)
-
-    class Meta:
-        model = Room
-        fields = ['id', 'hotel', 'amenities', 'persons', 'photos']
+        fields = ['id', 'name', 'services', 'rooms', 'photos']
