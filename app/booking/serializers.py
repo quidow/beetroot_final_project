@@ -31,7 +31,7 @@ class HotelPhotoSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'photo', ]
 
 
-class HotelSerializer(serializers.ModelSerializer):
+class HotelSerializer(serializers.HyperlinkedModelSerializer):
     # photos = serializers.SlugRelatedField(
     #     many=True,
     #     read_only=True,
@@ -52,7 +52,7 @@ class RoomPhotoSerializer(serializers.ModelSerializer):
         fields = ['id', 'photo', 'room', ]
 
 
-class RoomSerializer(serializers.ModelSerializer):
+class RoomSerializer(serializers.HyperlinkedModelSerializer):
     photos = ImageUrlField(many=True, read_only=True)
 
     class Meta:
