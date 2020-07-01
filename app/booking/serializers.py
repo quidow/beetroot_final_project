@@ -1,4 +1,3 @@
-from django.conf import settings
 from rest_framework import serializers
 
 from .models import Amenity, Service, Hotel, HotelPhoto, Room, RoomPhoto
@@ -28,15 +27,22 @@ class ServiceSerializer(serializers.ModelSerializer):
 class RoomPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomPhoto
-        fields = ['id', 'photo', 'room', ]
+        fields = ['id', 'photo', ]
 
 
-class RoomSerializer(serializers.HyperlinkedModelSerializer):
+class RoomReadSerializer(serializers.HyperlinkedModelSerializer):
+    amenities = AmenitySerializer(many=True, read_only=True)
     photos = ImageUrlField(many=True, read_only=True)
 
     class Meta:
         model = Room
         fields = ['id', 'hotel', 'amenities', 'persons', 'photos']
+
+
+class RoomWriteSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Room
+        fields = ['amenities', 'persons',]
 
 
 class HotelPhotoSerializer(serializers.HyperlinkedModelSerializer):
@@ -45,14 +51,15 @@ class HotelPhotoSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'photo', ]
 
 
-class HotelSerializer(serializers.HyperlinkedModelSerializer):
+class HotelReadSerializer(serializers.HyperlinkedModelSerializer):
     # photos = serializers.SlugRelatedField(
     #     many=True,
     #     read_only=True,
     #     slug_field='photo'
     # )
+    services = ServiceSerializer(many=True, read_only=True)
     photos = ImageUrlField(many=True, read_only=True)
-    rooms = RoomSerializer(many=True, read_only=True)
+    rooms = RoomReadSerializer(many=True, read_only=True)
 
     # rooms = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='room-detail')
     # photos = HotelPhotoSerializer(many=True)
@@ -60,3 +67,9 @@ class HotelSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Hotel
         fields = ['id', 'name', 'services', 'rooms', 'photos']
+
+
+class HotelWriteSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Hotel
+        fields = ['name', 'services',]

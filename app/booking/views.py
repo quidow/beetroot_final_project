@@ -2,15 +2,12 @@ from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework import status
-
 from .models import Amenity, Service, Hotel, HotelPhoto, Room, RoomPhoto
 from .permissions import IsOwnerOrReadOnly, IsSuperUserOrReadOnly, IsOwnerOrReadOnlyHotelRel, \
     IsOwnerOrReadOnlyHotelRoomRel
-from .serializers import AmenitySerializer, ServiceSerializer, HotelSerializer, HotelPhotoSerializer, RoomSerializer, \
-    RoomPhotoSerializer
+from .serializers import AmenitySerializer, ServiceSerializer, HotelReadSerializer, HotelWriteSerializer, \
+    HotelPhotoSerializer, \
+    RoomPhotoSerializer, RoomReadSerializer, RoomWriteSerializer
 
 
 class AmenityViewSet(viewsets.ModelViewSet):
@@ -27,7 +24,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
 
 class HotelViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Hotel.objects.all()
-    serializer_class = HotelSerializer
+    # serializer_class = HotelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     # @action(detail=True, methods=['get', 'post', 'delete'])
@@ -49,6 +46,11 @@ class HotelViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     #         HotelPhoto.objects.get(pk=pk).delete()
     #         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return HotelReadSerializer
+        return HotelWriteSerializer
+
     def perform_create(self, serializer):
         serializer.save(owners=[self.request.user])
 
@@ -65,8 +67,13 @@ class HotelPhotoViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 class RoomViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Room.objects.all()
-    serializer_class = RoomSerializer
+    # serializer_class = RoomSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnlyHotelRel]
+
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return RoomReadSerializer
+        return RoomWriteSerializer
 
 
 class RoomPhotoViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
