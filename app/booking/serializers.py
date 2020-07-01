@@ -42,7 +42,7 @@ class RoomReadSerializer(serializers.HyperlinkedModelSerializer):
 class RoomWriteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Room
-        fields = ['amenities', 'persons',]
+        fields = ['amenities', 'persons', ]
 
 
 class HotelPhotoSerializer(serializers.HyperlinkedModelSerializer):
@@ -72,4 +72,4 @@ class HotelReadSerializer(serializers.HyperlinkedModelSerializer):
 class HotelWriteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Hotel
-        fields = ['name', 'services',]
+        fields = ['name', 'services', ]
