@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Amenity, Service, Hotel, HotelPhoto, Room, RoomPhoto
+from .models import Amenity, Service, Hotel, HotelPhoto, Room, RoomPhoto, RoomPrice
 
 
 class ImageUrlField(serializers.RelatedField):
@@ -24,6 +24,12 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'icon', ]
 
 
+class RoomPriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoomPrice
+        fields = ['id', 'date', 'price', ]
+
+
 class RoomPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomPhoto
@@ -32,11 +38,12 @@ class RoomPhotoSerializer(serializers.ModelSerializer):
 
 class RoomReadSerializer(serializers.HyperlinkedModelSerializer):
     amenities = AmenitySerializer(many=True, read_only=True)
+    prices = RoomPriceSerializer(many=True, read_only=True)
     photos = ImageUrlField(many=True, read_only=True)
 
     class Meta:
         model = Room
-        fields = ['id', 'hotel', 'amenities', 'persons', 'photos']
+        fields = ['id', 'hotel', 'amenities', 'persons', 'prices', 'photos']
 
 
 class RoomWriteSerializer(serializers.HyperlinkedModelSerializer):

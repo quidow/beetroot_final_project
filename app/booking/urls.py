@@ -1,5 +1,6 @@
 from rest_framework import routers
-from .views import AmenityViewSet, ServiceViewSet, HotelViewSet, HotelPhotoViewSet, RoomViewSet, RoomPhotoViewSet
+from .views import AmenityViewSet, ServiceViewSet, HotelViewSet, HotelPhotoViewSet, RoomViewSet, RoomPhotoViewSet, \
+    RoomPriceViewSet
 from rest_framework_extensions.routers import NestedRouterMixin
 
 
@@ -16,11 +17,17 @@ hotels.register(
     basename='hotels-photos',
     parents_query_lookups=['hotel']
 )
-hotels.register(
+rooms = hotels.register(
     r'rooms', RoomViewSet,
     basename='hotels-rooms',
     parents_query_lookups=['hotel']
-).register(
+)
+rooms.register(
+    r'prices', RoomPriceViewSet,
+    basename='rooms-prices',
+    parents_query_lookups=['room__hotel', 'room']
+)
+rooms.register(
     r'photos', RoomPhotoViewSet,
     basename='rooms-photos',
     parents_query_lookups=['room__hotel', 'room']

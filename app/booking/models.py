@@ -77,6 +77,17 @@ class Room(models.Model):
         verbose_name_plural = "Номера"
 
 
+class RoomPrice(models.Model):
+    room = models.ForeignKey(Room, related_name='prices', on_delete=models.CASCADE, verbose_name='Номер')
+    date = models.DateField(unique=True, verbose_name='Дата')
+    price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Стоимость')
+
+    class Meta:
+        ordering = ["date"]
+        verbose_name = "Стоимость номера"
+        verbose_name_plural = "Стоимость номеров"
+
+
 class RoomPhoto(models.Model):
     photo = models.ImageField(verbose_name='Фото')
     room = models.ForeignKey(Room, related_name='photos', on_delete=models.CASCADE, verbose_name='Номер')

@@ -2,12 +2,12 @@ from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
-from .models import Amenity, Service, Hotel, HotelPhoto, Room, RoomPhoto
+from .models import Amenity, Service, Hotel, HotelPhoto, Room, RoomPhoto, RoomPrice
 from .permissions import IsOwnerOrReadOnly, IsSuperUserOrReadOnly, IsOwnerOrReadOnlyHotelRel, \
     IsOwnerOrReadOnlyHotelRoomRel
 from .serializers import AmenitySerializer, ServiceSerializer, HotelReadSerializer, HotelWriteSerializer, \
     HotelPhotoSerializer, \
-    RoomPhotoSerializer, RoomReadSerializer, RoomWriteSerializer
+    RoomPhotoSerializer, RoomReadSerializer, RoomWriteSerializer, RoomPriceSerializer
 
 
 class AmenityViewSet(viewsets.ModelViewSet):
@@ -78,6 +78,16 @@ class RoomViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         hotel = Hotel.objects.get(pk=self.get_parents_query_dict()['hotel'])
         serializer.save(hotel=hotel)
+
+
+class RoomPriceViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = RoomPrice.objects.all()
+    serializer_class = RoomPriceSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnlyHotelRoomRel]
+
+    def perform_create(self, serializer):
+        room = Room.objects.get(pk=self.get_parents_query_dict()['room'])
+        serializer.save(room=room)
 
 
 class RoomPhotoViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
