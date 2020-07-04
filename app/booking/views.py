@@ -75,6 +75,10 @@ class RoomViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
             return RoomReadSerializer
         return RoomWriteSerializer
 
+    def perform_create(self, serializer):
+        hotel = Hotel.objects.get(pk=self.get_parents_query_dict()['hotel'])
+        serializer.save(hotel=hotel)
+
 
 class RoomPhotoViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = RoomPhoto.objects.all()
