@@ -68,6 +68,7 @@ class HotelPhoto(models.Model):
 
 class Room(models.Model):
     hotel = models.ForeignKey(Hotel, related_name='rooms', on_delete=models.CASCADE, verbose_name='Отель')
+    name = models.CharField(max_length=255, blank=True, null=True, verbose_name='Название')
     amenities = models.ManyToManyField(Amenity, blank=True, verbose_name='Удобства')
     persons = models.PositiveSmallIntegerField(default=1, verbose_name='Количество человек')
 
