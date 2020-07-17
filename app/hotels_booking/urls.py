@@ -26,7 +26,7 @@ router.registry.extend(booking_router.registry)
 
 urlpatterns = [
     url(r'^api/', include(router.urls)),
-    url(r'^auth/', include('rest_framework.urls')),
+    url(r'', include('rest_framework.urls')),
     url(r'^auth/', include('core.urls')),
     path('admin/', admin.site.urls),
 ]
