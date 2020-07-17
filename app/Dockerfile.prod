@@ -20,7 +20,7 @@ RUN apk update \
 RUN pip install --upgrade pip
 RUN pip install flake8
 COPY . /usr/src/app/
-RUN flake8 --ignore=E501,F401 --exclude ./venv .
+RUN flake8 --ignore=E501,F401,E722 --exclude ./venv .
 
 # install dependencies
 COPY ./requirements.txt .
