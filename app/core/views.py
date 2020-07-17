@@ -56,7 +56,7 @@ def signup(request):
 def activate(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
-        user = UserModel.get(pk=uid)
+        user = UserModel._default_manager.get(pk=uid)
     except(TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
         user = None
     if user is not None and default_token_generator.check_token(user, token):
