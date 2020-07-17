@@ -28,27 +28,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
 
 class HotelViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Hotel.objects.all()
-    # serializer_class = HotelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-
-    # @action(detail=True, methods=['get', 'post', 'delete'])
-    # def photos(self, request, pk=None):
-    #     print(pk)
-    #     if request.method == 'GET':
-    #         hotel = self.get_object()
-    #         photos = HotelPhoto.objects.filter(hotel=hotel)
-    #         print(len(photos))
-    #         serializer = HotelPhotoSerializer(data=photos, many=True, context={'request': request})
-    #         serializer.is_valid()
-    #         return Response(serializer.data)
-    #     if request.method == 'POST':
-    #         hotel = self.get_object()
-    #         photo = HotelPhoto.objects.create(hotel=hotel, photo=request.data["photo"])
-    #         serializer = HotelPhotoSerializer(photo)
-    #         return Response(serializer.data)
-    #     if request.method == 'DELETE':
-    #         HotelPhoto.objects.get(pk=pk).delete()
-    #         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -71,7 +51,6 @@ class HotelPhotoViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 class RoomViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Room.objects.all()
-    # serializer_class = RoomSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnlyHotelRel]
 
     def get_serializer_class(self):
@@ -109,7 +88,7 @@ class RoomViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
                                (SELECT generate_series(min("date"), '{request.query_params['check_out']}'::date, '1 day')::date AS "date"
                                 FROM public.booking_roomprice
                                 where room_id = {pk}) x
-                             LEFT   JOIN public.booking_roomprice t USING ("date")
+                             LEFT   JOIN (select * from public.booking_roomprice where room_id = {pk}) t USING ("date")
                              ORDER  BY x."date") AS p
                           ORDER  BY p."date") AS q) AS z
                     WHERE "date" >= '{request.query_params['check_in']}'::date""")
