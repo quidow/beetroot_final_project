@@ -20,6 +20,8 @@ services:
       - POSTGRES_USER=hotels_booking
       - POSTGRES_PASSWORD=hotels_booking
       - POSTGRES_DB=hotels_booking_dev
+add    ports:
+      - 5432:5432
   redis:
     image: redis:6-alpine
     command: redis-server
