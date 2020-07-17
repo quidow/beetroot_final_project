@@ -12,6 +12,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from .serializers import UserSerializer
 from .forms import SignUpForm
+from .tasks import send_reg_email
 
 UserModel = get_user_model()
 
@@ -34,19 +35,9 @@ def signup(request):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            current_site = get_current_site(request)
-            mail_subject = 'Activate your account.'
-            message = render_to_string('core/acc_active_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': default_token_generator.make_token(user),
-            })
+            domain = get_current_site(request)
             to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                mail_subject, message, to=[to_email]
-            )
-            email.send()
+            send_reg_email.delay(user.pk, str(domain), to_email)
             return HttpResponse('Please confirm your email address to complete the registration')
     else:
         form = SignUpForm()

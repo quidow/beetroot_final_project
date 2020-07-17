@@ -20,6 +20,21 @@ services:
       - POSTGRES_USER=hotels_booking
       - POSTGRES_PASSWORD=hotels_booking
       - POSTGRES_DB=hotels_booking_dev
+  redis:
+    image: redis:6-alpine
+    command: redis-server
+    ports:
+      - '6379:6379'
+  celery:
+    build: ./app
+    command: celery -A hotels_booking worker -B
+    links:
+      - redis
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - web
+      - redis
 
 volumes:
   postgres_data:

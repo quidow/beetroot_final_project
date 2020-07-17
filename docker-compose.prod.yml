@@ -30,6 +30,18 @@ services:
       - 1337:80
     depends_on:
       - web
+  celery:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.prod
+    command: celery -A hotels_booking worker -B
+    links:
+      - redis
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - web
+      - redis
 
 volumes:
   postgres_data:
