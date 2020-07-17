@@ -30,6 +30,11 @@ services:
       - 1337:80
     depends_on:
       - web
+  redis:
+    image: redis:6-alpine
+    command: redis-server
+    ports:
+      - '6379:6379'
   celery:
     build:
       context: ./app
