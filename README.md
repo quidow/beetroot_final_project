@@ -1,7 +1,7 @@
 # Beetroot Academy. Python for Beginners. Final project
 <a href="https://beetroot.quidow.pp.ua/api/">Demo</a>
 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-<a href="https://beetroot.quidow.pp.ua/auth/register//">Registration on demo with email confirmation</a>
+<a href="https://beetroot.quidow.pp.ua/auth/register/">Registration on demo with email confirmation</a>
 ## API Endpoints
 ### User signup
 * **URL**
