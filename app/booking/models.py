@@ -80,11 +80,14 @@ class Room(models.Model):
 
 class RoomPrice(models.Model):
     room = models.ForeignKey(Room, related_name='prices', on_delete=models.CASCADE, verbose_name='Номер')
-    date = models.DateField(unique=True, verbose_name='Дата')
+    date = models.DateField(verbose_name='Дата')
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Стоимость')
 
     class Meta:
         ordering = ["date"]
+        constraints = [
+            models.UniqueConstraint(fields=['room', 'date'], name='unique room and date')
+        ]
         verbose_name = "Стоимость номера"
         verbose_name_plural = "Стоимость номеров"
 
