@@ -19,7 +19,7 @@
 * **Method:**
 
   `POST`
-### Refresh access Token
+### Refresh access token
 * **URL**
 
   /auth/token/refresh/
@@ -103,6 +103,14 @@
 * **URL**
 
   /api/hotels/{hotel_id}/rooms/{room_id}/
+
+* **Methods:**
+
+  `GET` | `PUT` | `PATCH` | `DELETE`
+### Calculate hotel's room price for date interval
+* **URL**
+
+  /api/hotels/{hotel_id}/rooms/{room_id}/?check_in={YYYY-MM-DD}&check_out={YYYY-MM-DD}
 
 * **Methods:**
 
